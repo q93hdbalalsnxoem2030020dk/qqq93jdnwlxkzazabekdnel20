@@ -61,11 +61,11 @@ lunarButton.Position = UDim2.new(0.5, -100, 0.5, -25)
 lunarButton.Text = "LunarAnti {off}"
 lunarButton.Parent = screenGui
 
-lunarButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Set background color to black
-lunarButton.BorderColor3 = Color3.fromRGB(255, 255, 255) -- Set border color to white
-lunarButton.Font = Enum.Font.Arcade -- Set the font to Arcade
-lunarButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- Set text color to white
-lunarButton.TextSize = 24 -- Set text size
+lunarButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+lunarButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
+lunarButton.Font = Enum.Font.Arcade
+lunarButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+lunarButton.TextSize = 24
 
 lunarButton.Active = true
 lunarButton.Draggable = true
