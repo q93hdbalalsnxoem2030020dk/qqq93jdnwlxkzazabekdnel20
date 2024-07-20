@@ -54,6 +54,7 @@ end
 
 local screenGui = Instance.new("ScreenGui")
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+screenGui.ResetOnSpawn = false
 
 local lunarButton = Instance.new("TextButton")
 lunarButton.Size = UDim2.new(0, 200, 0, 50)
