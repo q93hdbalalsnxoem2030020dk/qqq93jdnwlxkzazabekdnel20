@@ -4,7 +4,7 @@ local function Notify(message)
     
     local frame = Instance.new("Frame")
     frame.Size = UDim2.new(0.5, 0, 0.1, 0)
-    frame.Position = UDim2.new(0.25, 0, -0.1, 0)
+    frame.Position = UDim2.new(0.5, 0, -0.1, 0)
     frame.BackgroundColor3 = Color3.new(0, 0, 0)
     frame.BorderSizePixel = 0 
     frame.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -39,6 +39,7 @@ local function Notify(message)
     textBlur.Parent = frame
     textBlur.ZIndex = textLabel.ZIndex - 1
     textBlur.TextStrokeTransparency = 0.75
+    
     frame:TweenPosition(UDim2.new(0.5, 0, 0.1, 0), "Out", "Quad", 1, true)
     wait(5)
     
@@ -71,15 +72,31 @@ lunarButton.TextSize = 24
 lunarButton.Active = true
 lunarButton.Draggable = true
 
+local heartbeatConnection
+
 local function toggleButton()
     if lunarButton.Text == "LunarAnti {off}" then
         lunarButton.Text = "LunarAnti {on}"
         getgenv().LunarIC = true
         Notify("AntiLock on")
+
+        heartbeatConnection = game:GetService("RunService").heartbeat:Connect(function()
+            if getgenv().LunarIC then
+                local vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(getgenv().AntiStrength, 0, 0)
+                game:GetService("RunService").RenderStepped:Wait()
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = vel
+            end
+        end)
     else
         lunarButton.Text = "LunarAnti {off}"
         getgenv().LunarIC = false
         Notify("AntiLock off")
+
+        if heartbeatConnection then
+            heartbeatConnection:Disconnect()
+            heartbeatConnection = nil
+        end
     end
 end
 
@@ -87,12 +104,3 @@ lunarButton.MouseButton1Click:Connect(toggleButton)
 
 getgenv().LunarIC = false
 getgenv().AntiStrength = 1000
-
-game:GetService("RunService").heartbeat:Connect(function()
-    if getgenv().XAnti ~= false then
-        local vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
-        game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(getgenv().AntiStrength, 0, 0)
-        game:GetService("RunService").RenderStepped:Wait()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = vel
-    end
-end)
