@@ -1,3 +1,44 @@
+local Lnr = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local TextButton = Instance.new("TextButton")
+local UICorner_2 = Instance.new("UICorner")
+
+Lnr.Name = "Lnr"
+Lnr.Parent = game.CoreGui
+Lnr.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Frame.Parent = Lnr
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.5, -75, 0.5, -25)
+Frame.Size = UDim2.new(0, 150, 0, 50)
+Frame.Active = true
+Frame.Draggable = true
+
+local function TopContainer()
+    Frame.Position = UDim2.new(0.5, -Frame.AbsoluteSize.X / 2, 0.5, -Frame.AbsoluteSize.Y / 2)
+end
+
+TopContainer()
+Frame:GetPropertyChangedSignal("AbsoluteSize"):Connect(TopContainer)
+
+UICorner.Parent = Frame
+
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0.1, 0, 0.2, 0)
+TextButton.Size = UDim2.new(0.8, 0, 0.6, 0)
+TextButton.Font = Enum.Font.GothamSemibold
+TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.TextSize = 14
+TextButton.Text = "LunarAnti {off}"
+
+UICorner_2.Parent = TextButton
+
 local function Notify(message)
     local screenGui = Instance.new("ScreenGui")
     screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -8,7 +49,6 @@ local function Notify(message)
     frame.BackgroundColor3 = Color3.new(0, 0, 0)
     frame.BorderSizePixel = 0 
     frame.AnchorPoint = Vector2.new(0.5, 0.5)
-    frame.Position = UDim2.new(0.5, 0, 0, 0)
     frame.Parent = screenGui
     
     local uicorner = Instance.new("UICorner")
@@ -53,34 +93,17 @@ local function Notify(message)
     screenGui:Destroy()
 end
 
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-screenGui.ResetOnSpawn = false
-
-local lunarButton = Instance.new("TextButton")
-lunarButton.Size = UDim2.new(0, 200, 0, 50)
-lunarButton.Position = UDim2.new(0.5, -100, 0.5, -25)
-lunarButton.Text = "LunarAnti {off}"
-lunarButton.Parent = screenGui
-
-lunarButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-lunarButton.BorderColor3 = Color3.fromRGB(255, 255, 255)
-lunarButton.Font = Enum.Font.Arcade
-lunarButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-lunarButton.TextSize = 24
-
-lunarButton.Active = true
-lunarButton.Draggable = true
-
+local lunarAntiState = false
 local heartbeatConnection
 
-local function toggleButton()
-    if lunarButton.Text == "LunarAnti {off}" then
-        lunarButton.Text = "LunarAnti {on}"
+TextButton.MouseButton1Click:Connect(function()
+    lunarAntiState = not lunarAntiState
+    if lunarAntiState then
+        TextButton.Text = "LunarAnti {on}"
+        Notify("LunarAnti on")
         getgenv().LunarIC = true
-        Notify("AntiLock on")
-
-        heartbeatConnection = game:GetService("RunService").heartbeat:Connect(function()
+        
+        heartbeatConnection = game:GetService("RunService").Heartbeat:Connect(function()
             if getgenv().LunarIC then
                 local vel = game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity
                 game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(getgenv().AntiStrength, 0, 0)
@@ -89,18 +112,16 @@ local function toggleButton()
             end
         end)
     else
-        lunarButton.Text = "LunarAnti {off}"
+        TextButton.Text = "LunarAnti {off}"
+        Notify("LunarAnti off")
         getgenv().LunarIC = false
-        Notify("AntiLock off")
-
+        
         if heartbeatConnection then
             heartbeatConnection:Disconnect()
             heartbeatConnection = nil
         end
     end
-end
-
-lunarButton.MouseButton1Click:Connect(toggleButton)
+end)
 
 getgenv().LunarIC = false
 getgenv().AntiStrength = 1000
